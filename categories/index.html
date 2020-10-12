@@ -1,0 +1,53 @@
+---
+layout: page
+title:  Categories
+permalink: /categories/
+---
+<div class="tag-list">
+
+{% assign split_char = '#' %}
+{% assign max_length = 0 %}
+
+{% for s in site.categories %}
+  {% assign name = s | first %}
+  {% assign size = site.categories[name] | size %}
+  {% assign len = size | split: null | size %}
+  {% if max_length < len %}
+    {% assign max_length = len | plus: 0%}
+  {% endif %}
+{% endfor %}
+
+{% assign categories = '' | split: "" %}
+{% for s in site.categories %}
+  {% assign name = s | first %}
+  {% assign size = site.categories[name] | size %}
+  {% assign name = name | split: split_char %}
+
+  {% assign len = size | split: null | size %}
+  {% assign pad = max_length | minus: len %}
+
+  {% for c in (1..pad) %}
+    {% assign size = size | prepend: '0' %}
+  {% endfor %}
+
+  {% assign temp = size | split: split_char | concat: name %}
+
+  {% assign categories = categories | push: temp %} 
+{% endfor %}
+
+{% assign categories = categories | sort %}
+
+{% for cat in categories reversed %}
+  <div class="tag-group">
+    {% capture cat_name %}{{ cat | last }}{% endcapture %}
+    <a href="#{{ cat_name | slugize }}"><h5 class="tag-group-title" id="{{ cat_name | slugize }}">
+      {{ cat_name }}
+    </h5></a>
+    {% for post in site.categories[cat_name] %}
+    <article class="tag-item">
+      <a class="tag-item-title" href="{{ site.url }}{{ post.url }}">{{post.title}}</a>
+    </article>
+    {% endfor %}
+  </div>
+{% endfor %}
+</div>

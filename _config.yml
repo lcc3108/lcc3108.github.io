@@ -1,0 +1,84 @@
+#
+###################################
+# Site wide configuration
+####################################
+#
+title: lcc3108
+email: dlacocjf32@gmail.com
+description: lcc3108's Github Page blog.
+url: https://lcc3108.github.io
+keywords: ["blog", "jekyll"]
+
+#
+###################################
+# Jekyll configuration
+####################################
+#
+timezone: Asia/Seoul
+markdown: kramdown
+highlighter: rouge
+excerpt_separator: <!--more-->
+permalink: /articles/:year-:month/:title
+exclude:
+  - LICENSE.txt
+  - README.md
+  - Rakefile
+  - Gemfile
+  - Gemfile.lock
+  - changelog.md
+  - "*.Rmd"
+  - vendor
+  - .travis.yml
+  - node_modules
+
+kramdown:
+  syntax_highlighter: rouge
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+#
+###################################
+# Site Owner configuration
+####################################
+#
+owner:
+  name: lcc3108
+  avatar: avatar.jpg
+  job: ""
+  bio: ""
+  email: lcc3108@gmail.com
+  disqus-shortname: lcc3108-blog
+  twitter: #username
+  facebook: #username
+  google:
+    plus: #username
+    analytics: UA-145710468-1
+    verify:
+    ad-client:
+    ad-slot:
+  bing-verify:
+  github: lcc3108
+  gitlab: #username
+  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
+  linkedin: #username
+  skype: #username
+  xing: #username
+  instagram: #username
+  lastfm: #username
+  tumblr: #username
+  pinterest: #username
+  foursquare: #username
+  steam: #username
+  dribbble: #username
+  youtube: #username
+  soundcloud: #username
+  weibo: #username
+  flickr: #username
+  500px: #username
+  codepen: #username
+  reddit: #username
+  telegram: #username
+  resume: #url
