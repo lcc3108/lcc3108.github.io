@@ -28,11 +28,8 @@ Bastion Host에 대한 자세한 설명과 아키텍쳐는 AWS 문서로 대체�
 
 ![Bastion-Host-아키텍쳐.png](https://lcc3108.github.io/img/2020-11/AWS-SSM/Untitled.png)
 
-<center>
 
 [AWS Bastion Host 공식 문서 및 사진 출처](https://docs.aws.amazon.com/ko_kr/quickstart/latest/linux-bastion/overview.html)
-
-</center>
 
 
 Bastion Host 사용시 보안적 이점이 있지만 인스턴스를 따로 관리해주면서 인스턴스 비용이 나온다는 점을 AWS System Manger(SSM) 또는 시스템 매니저의 Session Manager를 통해 무료로 대체 시킬 수 있다.
