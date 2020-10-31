@@ -22,15 +22,18 @@ comments: true
 
 AWS에서 Private Subnet을 사용하여 서버를 구성하는 경우가 있다.
 
-Private Subnet의 경우 외부에서 접속이 불가능하기때문에 Basion Host를 Public에 배치하면서 같은 VPC에 두어 Bastion Host를 통해 Private Subnet의 인스턴스에 접속 할 수있게해주는 관문 역할을 해준다.
+Private Subnet의 경우 외부에서 접속이 불가능하기 때문에 Basion Host를 Public에 배치하면서 같은 VPC에 두어 Bastion Host를 통해 Private Subnet의 인스턴스에 접속 할 수있게해주는 관문 역할을 해준다.
 
 Bastion Host에 대한 자세한 설명과 아키텍쳐는 AWS 문서로 대체한다.
 
 ![Bastion-Host-아키텍쳐.png](https://lcc3108.github.io/img/2020-11/AWS-SSM/Untitled.png)
 
-출처 및 참고문서
+<center>
 
-[AWS Bastion Host 공식 문서](https://docs.aws.amazon.com/ko_kr/quickstart/latest/linux-bastion/overview.html)
+[AWS Bastion Host 공식 문서 및 사진 출처](https://docs.aws.amazon.com/ko_kr/quickstart/latest/linux-bastion/overview.html)
+
+</center>
+
 
 Bastion Host 사용시 보안적 이점이 있지만 인스턴스를 따로 관리해주면서 인스턴스 비용이 나온다는 점을 AWS System Manger(SSM) 또는 시스템 매니저의 Session Manager를 통해 무료로 대체 시킬 수 있다.
 
@@ -38,9 +41,9 @@ Bastion Host 사용시 보안적 이점이 있지만 인스턴스를 따로 관�
 
 ## 필요 조건
 
-Session Manager는 AWS System Manager의 하위기능이기 때문에 System Manager의 조건을 충족해야한다. OS별 조건은 아래 링크와 같다.
+Session Manager는 AWS System Manager의 하위기능이기 때문에 System Manager의 조건을 충족해야한다. [SSM 지원 OS](https://docs.aws.amazon.com/systems-manager/latest/userguide/prereqs-operating-systems.html)목록에 있다면 사용이 가능하다.
 
-[SSM 지원 OS](https://docs.aws.amazon.com/systems-manager/latest/userguide/prereqs-operating-systems.html)
+
 
 ## 설치방법
 
@@ -112,9 +115,9 @@ EC2화면에서 IAM을 변경하고 싶은 인스턴스를 우클릭한다.
 
 ### AWS System Manager(SSM) 설정
 
-SSM은 인프라를 제어하기 위한 AWS 서비스로써 운영관리, 어플리케이션관리, 작업, 인스턴스 노드 관리 등을 지원한다. 자세한내용은 AWS Docs를 참고하길 바란다.
+SSM은 인프라를 제어하기 위한 AWS 서비스로써 운영관리, 어플리케이션관리, 작업, 인스턴스 노드 관리 등을 지원한다. 자세한내용은 [AWS SSM 공식문서](https://docs.aws.amazon.com/ko_kr/systems-manager/latest/userguide/what-is-systems-manager.html)를 참고하길 바란다.
 
-[AWS SSM 공식문서](https://docs.aws.amazon.com/ko_kr/systems-manager/latest/userguide/what-is-systems-manager.html)
+
 
 Session Manager또한 SSM의 기능중 하나이기 때문에 사용하기위해서는 SSM을 설정해줘야한다.
 
@@ -122,14 +125,15 @@ AWS에서 AWS System Manager 서비스로 들어가준다. 빠른설정을 누�
 
 ![https://lcc3108.github.io/img/2020-11/AWS-SSM/Untitled%2010.png](https://lcc3108.github.io/img/2020-11/AWS-SSM/Untitled%2010.png)
 
-SSM의 기능중 인스턴스에 특정 프로그램을 설치하여 관리 할 수 있기때문에 아래의 옵션을 선택할 수 있다. 필요하다면 체크하도록하자
+SSM의 기능중 인스턴스에 특정 프로그램을 설치하여 관리 할 수 있기때문에 아래의 옵션을 필요하다면 선택해준다.
 
 Configuration options 탭
 
 - [ ]  Install and configure the CloudWatch agent (더 자세한 모니터링을 위한 툴 설치)
 - [ ]  Update the CloudWatch agent once every 30 days(해당툴을 30일마다 업데이트)
 
-대상인스턴스를 고르는 화면에서 인스턴스 태그가 잘되어있다면 1번째방법을 자신의 인스턴스가 매우적다면 2번째인 수동추가나 4번째인 모든인스턴스 추가를 추천한다.
+대상인스턴스를 고르는 화면에서 인스턴스 태그가 잘되어있다면 첫번째방벙을 사용한다.
+인스턴스가 매우적다면 두번째인 수동추가나 네번째인 모든인스턴스 추가를 추천한다.
 
 ![https://lcc3108.github.io/img/2020-11/AWS-SSM/Untitled%2011.png](https://lcc3108.github.io/img/2020-11/AWS-SSM/Untitled%2011.png)
 
