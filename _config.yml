@@ -3,7 +3,7 @@
 # Site wide configuration
 ####################################
 #
-title: lcc3108
+title: 너구리는 라쿤이 아니다
 email: dlacocjf32@gmail.com
 description: lcc3108's Github Page blog.
 url: https://lcc3108.github.io
@@ -60,7 +60,7 @@ owner:
   avatar: avatar.jpg
   job: ""
   bio: ""
-  email: lcc3108@gmail.com
+  email: dlacocjf32@gmail.com
   disqus-shortname: lcc3108-github-io
   twitter: #username
   facebook: #username
