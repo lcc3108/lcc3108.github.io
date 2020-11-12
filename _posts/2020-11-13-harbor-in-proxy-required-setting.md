@@ -5,7 +5,7 @@ categories: [Docker]
 tags: [Harbor]
 comments: true
 ---
-# 
+
 
 ### 사용하게된 이유
 
@@ -13,13 +13,13 @@ comments: true
 
 ### 산뜻한 출발
 
-설치는 docker-compose를 사용하여 원하는 설정만 해주고 스크립트만 실행하면 끝났다. 
+설치는 docker-compose를 사용하여 원하는 설정만 해주고 스크립트만 실행하면 된다. 
 
-그 후 간단한 테스트 도커이미지 푸쉬와 빌드를 해보았고 성공적으로 마쳤다. 
+그 후 간단한 테스트를 수행하기 위해 도커이미지 푸쉬와 빌드를 해보았고 성공적하였다. 
 
-그뒤 젠킨스를 설정하면서 DinD DooD와 씨름하면서 설정을 맞췄다.
-
-현재 리다이렉션용 서버에 하버는 신규설치를 젠킨스는 마이그레이션을 진행하였다. 아파치 웹서버를 사용하고 있었기때문에 Name Virtual Host로 ProxyPass를 사용하여 각 url에 서비스를 매핑시켰다.
+젠킨스를 설정하면서 DinD DooD와 씨름하면서 설정을 DooD로 하였고
+리다이렉션용 서버에 하버는 신규설치를 젠킨스는 마이그레이션을 진행하였다.
+아파치 웹서버를 사용하고 있었기때문에 Name Virtual Host로 ProxyPass를 사용하여 각 url에 서비스를 매핑시켰다.
 모든 설정을 끝마치고 기분좋게 젠킨스를 돌리는데 빨간불이 떴다.
 
 도커 빌드, 태깅 까지 잘돼는데 푸쉬할때 unknown blob이라는 에러가 발생하였다.
@@ -34,7 +34,7 @@ comments: true
 
 [httpd.conf파일에 아래와같이 추가해라](https://stackoverflow.com/questions/51508146/blob-unknown-when-pushing-to-custom-registry-through-apache-proxy) 등 많은 방법들을 시도해 보았지만 작동하지않았다.
 
-
+### 문제해결
 
 그러다가 harbor의 공식문서에 [Troubleshooting문서](https://goharbor.io/docs/2.1.0/install-config/troubleshoot-installation/)가 존재하길래 보았는데 nginx라던가 클라우드에서 제공하는 LB 즉 프록시를 사용하게 되면은 아래의 설정을 주석처리하거나 지워야한다.
 
@@ -46,13 +46,14 @@ proxy_set_header X-Forwarded-Proto $scheme;
 
 ![harbor-directory-ls.png](https://lcc3108.github.io/img/2020-11/harbor/Untitled%201.png)
 
-./common/config/nginx/nginx.conf 에서 위의 proxy_set_header X-Forwarded-Proto $scheme; 설정 값을 지워주면된다. 지워준뒤 docker ps 해서 나오는 go harbor nginx 컨테이너의 이름을 아래의 {HARBOR_NGINX_NAME}에 적어주면된다.
+./common/config/nginx/nginx.conf 에서 위의 proxy_set_header X-Forwarded-Proto $scheme; 설정 값을 지워주면된다. 
+지워준뒤 docker ps 해서 나오는 go harbor nginx 컨테이너의 이름을 아래의 {HARBOR_NGINX_NAME}에 적어주면된다.
 
 ```groovy
 docker exec -it {HARBOR_NGINX_NAME} nginx -s reload
 ```
 
-참고용 go-harbor-nginx 컨테이너의 nginx.conf파일
+### 수정된 nginx.conf 파일
 ```groovy
 worker_processes auto;
 pid /tmp/nginx.pid;
