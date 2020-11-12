@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Zoom API Meeting Report 버그
-categories: [jekyll]
+categories: [Zoom]
 tags: [Zoom]
 comments: true
 ---
