@@ -10,6 +10,7 @@ comments: true
 ### 사용하게된 이유
 
 회사 서비스를 dockerization을 한뒤 nginx를 통해 인스턴스 내부에서 Blue/Green 배포를 하기위해 직접 도커파일을 작성하고 jenkins pipline을 작성하였다.
+
 물론 순탄치 않은 과정이였지만 회사 서비스 이미지를 퍼블릭 레포지토리에 저장 할 수 없어서 프라이빗 레포지토리인 harbor를 사용하였다. 
 
 ### 산뜻한 출발
@@ -44,11 +45,12 @@ comments: true
 proxy_set_header X-Forwarded-Proto $scheme;
 ```
 
-지우는 법은 harbor의 설치경로는 아래와같은 파일 경로를 가지고 있을 것이다. 
+지우는 법은 harbor의 설치경로는 아래와같은 디렉토리 구조를 가지고 있을 것이다. 
 
 ![harbor-directory-ls.png](https://lcc3108.github.io/img/2020-11/harbor/Untitled%201.png)
 
 ./common/config/nginx/nginx.conf 에서 위의 proxy_set_header X-Forwarded-Proto $scheme; 설정 값을 지워주면된다. 
+
 지워준뒤 docker ps 해서 나오는 go harbor nginx 컨테이너의 이름을 아래의 {HARBOR_NGINX_NAME}에 적어주면된다.
 
 ```groovy
