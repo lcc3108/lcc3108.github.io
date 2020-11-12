@@ -9,24 +9,26 @@ comments: true
 
 ### 사용하게된 이유
 
-회사 서비스를 dockerization을 한뒤 nginx를 통해 인스턴스 내부에서 Blue/Green 배포를 하기위해 직접 도커파일을 작성하고 jenkins pipline을 작성하였다. 물론 순탄치 않은 과정이였지만(추후에 포스팅)  회사 서비스 이미지를 퍼블릭 레포지토리에 저장 할 수 없어서 프라이빗 레포지토리인 harbor를 사용하였다. 
+회사 서비스를 dockerization을 한뒤 nginx를 통해 인스턴스 내부에서 Blue/Green 배포를 하기위해 직접 도커파일을 작성하고 jenkins pipline을 작성하였다.
+물론 순탄치 않은 과정이였지만 회사 서비스 이미지를 퍼블릭 레포지토리에 저장 할 수 없어서 프라이빗 레포지토리인 harbor를 사용하였다. 
 
 ### 산뜻한 출발
 
 설치는 docker-compose를 사용하여 원하는 설정만 해주고 스크립트만 실행하면 된다. 
 
-그 후 간단한 테스트를 수행하기 위해 도커이미지 푸쉬와 빌드를 해보았고 성공적하였다. 
+그 후 간단한 테스트를 수행하기 위해 도커이미지 푸쉬와 빌드를 해보았고 성공하였다. 
 
 젠킨스를 설정하면서 DinD DooD와 씨름하면서 설정을 DooD로 하였고
 리다이렉션용 서버에 하버는 신규설치를 젠킨스는 마이그레이션을 진행하였다.
+
 아파치 웹서버를 사용하고 있었기때문에 Name Virtual Host로 ProxyPass를 사용하여 각 url에 서비스를 매핑시켰다.
 모든 설정을 끝마치고 기분좋게 젠킨스를 돌리는데 빨간불이 떴다.
 
-도커 빌드, 태깅 까지 잘돼는데 푸쉬할때 unknown blob이라는 에러가 발생하였다.
-
-바로 구글님께 여쭈어 보았더니 [harbor.yml에 먼가를 추가해라](https://github.com/docker/distribution/issues/970#issuecomment-284227065), 
+도커 빌드, 태깅 까지 잘돼는데 푸쉬할때 아래와같이 어느정도 진행중에 unknown blob이라는 에러가 발생하였다.
 
 ![harbor-error.png](https://lcc3108.github.io/img/2020-11/harbor/Untitled.png)
+바로 구글님께 여쭈어 보았더니 [harbor.yml에 뭔가를 추가해라](https://github.com/docker/distribution/issues/970#issuecomment-284227065), 
+
 
 
 
