@@ -10,6 +10,7 @@ comments: true
 ### 들어가기 전
 
 쿠버네티스에서 뭔가를 실행 시켜보고 싶을때 즉 playground가 필요할때 gcp의 3개월 무료크레딧을 사용하고 있는 GKE를 사용하고 있었다.
+
 그러다가 udemy Istio강의를 보면서 minikube를 설치하려다가 설치를 위해 Docker Desktop에 설정하는곳에 쿠버네티스가 떡하니 있어서 설치를 해보았다.
 
 윈도우를 기준으로 설치과정을 설명해보자 한다.(사실 엄청 간단하다)
@@ -124,3 +125,8 @@ kubectl proxy&
 ![https://lcc3108.github.io/img/2020-11/14/Untitled%204.png](https://lcc3108.github.io/img/2020-11/14/Untitled%204.png)
 
 대시보드의 여러가지 메뉴가 있으니 자유롭게 둘러보면 된다.
+
+---
+2020-11-15일 수정
+쿠버네티스 대시보드는 [44bits 도커데스크톱 쿠버네티스 글](https://www.44bits.io/ko/post/news--release-docker-desktop-with-kubernetes-to-stable-channel)을 참고하면서 진행하였으며 인증부분에 대한 내용이 없어 kubernetes-dashboard 깃허브를 참고하며 추가하였다.
+
