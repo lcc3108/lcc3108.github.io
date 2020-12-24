@@ -172,7 +172,7 @@ EOF
 ```bash
 $ kubectl get certificate
 NAMESPACE      NAME    READY   SECRET      AGE
-default       nginx   True    nginx-tls   62m
+istio-system   nginx   True    nginx-tls   62m
 ```
 
 보통 인증서는 수분내(1~2분내외)로 생성이 된다.
@@ -246,6 +246,6 @@ EOF
 ---
 
 참고 URL
-- https://cert-manager.io/docs/
-- https://istio.io/latest/docs/ops/integrations/certmanager/
-- https://transparencyreport.google.com/https/overview
+- [cert-manager docs](https://cert-manager.io/docs/)
+- [istio ingergration certmanager](https://istio.io/latest/docs/ops/integrations/certmanager/)
+- [구글 https 통계](https://transparencyreport.google.com/https/overview)
