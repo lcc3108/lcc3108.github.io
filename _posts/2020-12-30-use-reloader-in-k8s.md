@@ -38,7 +38,7 @@ complete -F __start_kubectl k
 
 ### 이미지 변경 시
 
-아래명령어를 통해 sync-nginx라는 디플로이먼트에 이미지를 nginx:1.18로 생성해주자
+sync-nginx 디플로이먼트의 이미지를 nginx:1.18로 지정
 
 ```bash
 $ k create deployment my-nginx --image=nginx:1.18
@@ -58,7 +58,7 @@ $ k describe pod | grep image
   Normal  Pulled     10m   kubelet            Successfully pulled image "nginx:1.18" in 2.1321321s
 ```
 
-그뒤 nginx:1.19로 변경시켜보자
+sync-nginx 디플로이먼트의 이미지를 nginx:1.19로 변경
 
 ```bash
 $ k set image deployment/my-nginx nginx=nginx:1.19
@@ -126,11 +126,11 @@ Pod Running 중인지 확인
 
 컨피그맵이나 시크릿을 사용하는 디플로이에 .metadata.annotations 에 값 추가
 
-어노테이션 종류 (a | b).example은 a.exaple OR b.example 둘중 한개
+어노테이션 종류 (a \| b).example은 a.exaple OR b.example 둘중 한개
 
 - reloader.stakater.com/auto: "true" : 디플로이먼트의 컨피그맵, 시크릿 변경시 자동으로 롤아웃
 - reloader.stakater.com/search: "true" : 디플로이먼트의 컨피그맵, 시크릿 중 reloader.stakater.com/match: "true" 어노테이션을 가진 오브젝트 변경시 롤아웃
-- (configmap | secret).reloader.stakater.com/reload: "foo-configmap" : 해당 이름을 가진 오브젝트 변경시 롤아웃
+- (configmap \| secret).reloader.stakater.com/reload: "foo" : foo라는 이름을 가진 컨피그맵 또는 시크릿 변경시 롤아웃
 
 ### 예시
 
@@ -233,7 +233,7 @@ EOF
 팟의 출력확인(이때 팟의 이름은 노드마다 다름)
 
 ```bash
-$ k get pod                                                                                                                     275ms | docker-desktop | test  
+$ k get pod
 NAME                           READY   STATUS    RESTARTS   AGE  
 no-reloder-8c54d96ff-d9csv     1/1     Running   0          3m40s
 use-reloder-55b4545b4c-wvvrz   1/1     Running   0          3m40s
@@ -280,7 +280,7 @@ no-reloder-8c54d96ff-d9csv    1/1     Running   0          20m
 use-reloder-745b4c6cc-d58tq   1/1     Running   0          3m15s
 ```
 
-아까와 같이 출력을 조회해보자
+출력 조회
 
 ```bash
 $ k logs no-reloder-8c54d96ff-d9csv
