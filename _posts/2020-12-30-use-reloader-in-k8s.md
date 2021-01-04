@@ -93,7 +93,7 @@ $ k describe pod | grep image
 
 컨피그맵 변경시 값은 바뀌어 있으나 프로세스가 해당 파일을 적용시키지 못하는 문제가 발생한다.
 
-이러한 문제를 [Stacker/Reloader](https://github.com/stakater/Reloaderhttps://github.com/stakater/Reloader)를(이하 리로더) 사용하여 해결할 수 있다.
+이러한 문제를 [Stacker/Reloader](https://github.com/stakater/Reloader)를(이하 리로더) 사용하여 해결할 수 있다.
 
 리로더는 Stacker에서 만든 오픈소스로 커스텀 컨트롤러역할을 하며 컨피그맵, 시크릿 값변경시 디플로이먼트를 롤링업데이트 시켜준다.
 
