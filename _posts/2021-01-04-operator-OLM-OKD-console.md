@@ -22,7 +22,9 @@ comments: true
     - [Certificate](#certificate)
     - [Gateway](#gateway)
     - [VirtualService](#virtualservice)
-  - [ArgoCD operator 설치](#argocd-operator-설치)
+  - [ArgoCD operator](#argocd-operator)
+    - [설치](#설치-1)
+    - [검증](#검증-2)
 - [참고 URL](#참고-url)
 
 ## 오퍼레이터(Operator)
@@ -57,13 +59,19 @@ operatorSDK에서 operator의 레벨을 아래와같이 정의하였다.
 
 ### 오퍼레이터 검색법
 
+안타깝게도 모든 어플리케이션에 오퍼레이터가 존재하지 않는다.
+
 오페레이터를 개발하는데는 kubebuilder와 operatorSDK가 있다.
 
 kubebuilder의 경우 배포를 할 수 있는 레포지토리(yum, apt, npm 등)이 없기때문에 보통 직접적으로 해당 어플리케이션의 문서나 깃 레포지토리에 존재한다.
 
-operatorSDK경우  [operatorhub](https://operatorhub.io/) 라는 레포지토리가 존재하며 Operator Lifecycle Manager를 통해 관리가 가능하다.
+고로 구글링에 어플리케이션명 operator로 검색하게되면 찾을 수 있다.
 
-둘다 검색을 한뒤 자신이 찾는버전에 맞거나 operator level이 적합한 것을 고르면 된다.
+operatorSDK경우  [operatorhub](https://operatorhub.io/) 라는 레포지토리가 존재하며 레포지토리에서 검색이 가능하다. 또한 Operator Lifecycle Manager를 통해 관리가 가능하다.
+
+오퍼레이터도 여러사람이 만들 수 있으며 개발하는 방식이 여러가지다 보니 여러개의 오퍼레이터가 존재할 수도있다.
+
+모두 검색을 한뒤 자신이 찾는버전에 맞거나 operator level이 적합한 것을 고르면 된다.
 
 ## 실습
 
@@ -73,13 +81,13 @@ Argo CD를  오퍼레이터를 이용하여 설치
 - Argo CD 오퍼레이터 : Argo CD를 관리해주는 오퍼레이터
 - OLM(Operator Lifecycle Manager) : npm, yarn, yum, apt 같은 오퍼레이터 관리 도구 
 - OKD Console : OLM관리메뉴가 있는 [오픈쉬프트](https://www.redhat.com/ko/topics/containers/red-hat-openshift-kubernetes) 대시보드
-- [istio](https://lcc3108.github.io/articles/2020-12/istio#istio-%EC%84%A4%EC%B9%98) or ingress or nodePort: 외부와의 연결 담당 여기서는 istio로 설명
-- [cert-manager](https://lcc3108.github.io/articles/2020-12/certmanager) : istio 사용시 인증서 관리
+- [istio](https://istio.io/) or ingress or nodePort: 외부와의 연결 담당 여기서는 istio로 설명
+- [cert-manager](https://cert-manager.io/) : 인증서 관리
 
 
 
 ### OLM
-Operator Lifecycle Manager는 오브젝트를 통해 선언적 방식으로 오퍼레이터 및 종속성 설치, 관리, 업그레이드를 관리해준다.
+Operator Lifecycle Manager는 오브젝트를 통해 선언적 방식으로 오퍼레이터와 종속성 설치, 관리, 업그레이드를 자동화 해준다.
 #### 설치
 
 21-01-03기준 최신버전 0.17.0 설치
@@ -216,7 +224,7 @@ kubectl port-forward -n olm service/okd-console 9000:9000
 
 localhost가 아닌 example.com과 같은 FQDN을 가지고있을때 설정
 
-Istio와 cert-manager 설정법은 블로그 참조
+[Istio](https://lcc3108.github.io/articles/2020-12/istio)와 [cert-manager](https://lcc3108.github.io/articles/2020-12/certmanager) 설정법은 블로그 참조
 
 #### Certificate
 인증서 생성
@@ -286,7 +294,11 @@ spec:
             host: okd-console.olm.svc.cluster.local
 ```
 
-### ArgoCD operator 설치
+### ArgoCD operator 
+ArgoCD는 Gitops의 구현체이다.
+
+지금 포스트에서는 오퍼레이터를 통해 ArgoCD라는걸 몰라도 간단히 설치를 할 수 있음을 확인할 수 있다.
+#### 설치
 
 좌측 Administration → Namespaces메뉴에서 Create Namespace로 argocd 생성
 
@@ -313,7 +325,7 @@ argocd 네임스페이스 선택 후 Install 클릭
 
 잠시 시간이 지나면 설치가 완료된다.
 
-설치 조회
+#### 검증
 
 명령어를 통해 Argo CD가 설치된 모습을 확인 할 수 있다.
 
