@@ -1,12 +1,12 @@
 ---
 layout: post
-title: 쿠버네티스 OLM과 OKD-Console를 사용한 Operator 설치
+title: 쿠버네티스 OLM과 OKD-console로 Operator 관리하기
 categories: [Kubernetes]
 tags: [Kubernetes]
 comments: true
 ---
 
-- [오퍼레이터](#오퍼레이터)
+- [오퍼레이터(Operator)](#오퍼레이터operator)
   - [오퍼레이터란](#오퍼레이터란)
   - [사용이유](#사용이유)
   - [오퍼레이터 검색법](#오퍼레이터-검색법)
@@ -25,7 +25,7 @@ comments: true
   - [ArgoCD operator 설치](#argocd-operator-설치)
 - [참고 URL](#참고-url)
 
-## 오퍼레이터
+## 오퍼레이터(Operator)
 
 ### 오퍼레이터란
 
@@ -41,7 +41,7 @@ operatorSDK에서 operator의 레벨을 아래와같이 정의하였다.
 
 1. 자동화된 설치와 설정 관리
 2. 마이너버전 업데이트 지원
-3.  백업, 복구 등 어플리케이션 라이프사이클 지원
+3. 백업, 복구 등 어플리케이션 라이프사이클 지원
 4. 매트릭과, 알러트, 로그, 분석 툴 지원
 5. 자동 운영(수평-수직 확장, 이상감지 등)
 
@@ -61,7 +61,7 @@ operatorSDK에서 operator의 레벨을 아래와같이 정의하였다.
 
 kubebuilder의 경우 배포를 할 수 있는 레포지토리(yum, apt, npm 등)이 없기때문에 보통 직접적으로 해당 어플리케이션의 문서나 깃 레포지토리에 존재한다.
 
-operatorSDK경우  [https://operatorhub.io/](https://operatorhub.io/) 라는 레포지토리가 존재하며 Operator Lifecycle Manager를 통해 관리가 가능하다.
+operatorSDK경우  [operatorhub](https://operatorhub.io/) 라는 레포지토리가 존재하며 Operator Lifecycle Manager를 통해 관리가 가능하다.
 
 둘다 검색을 한뒤 자신이 찾는버전에 맞거나 operator level이 적합한 것을 고르면 된다.
 
@@ -72,14 +72,14 @@ Argo CD를  오퍼레이터를 이용하여 설치
 - Argo CD : Gitops를 위한 툴(추후 포스트에서 사용법 제공)
 - Argo CD 오퍼레이터 : Argo CD를 관리해주는 오퍼레이터
 - OLM(Operator Lifecycle Manager) : npm, yarn, yum, apt 같은 오퍼레이터 관리 도구 
-- OKD Console : OLM관리메뉴가 있는 오픈쉬프트 대시보드
-- [istio](https://lcc3108.github.io/articles/2020-12/istio#istio-%EC%84%A4%EC%B9%98) or ingress or nodePort: istio기준 설명
+- OKD Console : OLM관리메뉴가 있는 [오픈쉬프트](https://www.redhat.com/ko/topics/containers/red-hat-openshift-kubernetes) 대시보드
+- [istio](https://lcc3108.github.io/articles/2020-12/istio#istio-%EC%84%A4%EC%B9%98) or ingress or nodePort: 외부와의 연결 담당 여기서는 istio로 설명
 - [cert-manager](https://lcc3108.github.io/articles/2020-12/certmanager) : istio 사용시 인증서 관리
 
-[Red Hat OpenShift와 쿠버네티스](https://www.redhat.com/ko/topics/containers/red-hat-openshift-kubernetes)
+
 
 ### OLM
-
+Operator Lifecycle Manager는 오브젝트를 통해 선언적 방식으로 오퍼레이터 및 종속성 설치, 관리, 업그레이드를 관리해준다.
 #### 설치
 
 21-01-03기준 최신버전 0.17.0 설치
@@ -173,7 +173,7 @@ spec:
         resources: {}
         command:
         - ./opt/bridge/bin/bridge
-        - "--base-address={https://your-domain.com}"
+        - "--base-address={https://your-domain.com}" ###### 변경 필요
         - "--public-dir=/opt/bridge/static"
 EOF
 ```
@@ -219,7 +219,7 @@ localhost가 아닌 example.com과 같은 FQDN을 가지고있을때 설정
 Istio와 cert-manager 설정법은 블로그 참조
 
 #### Certificate
-
+인증서 생성
 ```bash
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
@@ -237,7 +237,7 @@ spec:
 ```
 
 #### Gateway
-
+게이트웨이 추가 및 인증서 설정
 ```bash
 kind: Gateway
 apiVersion: networking.istio.io/v1alpha3
@@ -268,7 +268,7 @@ spec:
 ```
 
 #### VirtualService
-
+게이트웨이로 들어온 트래픽 처리
 ```bash
 kind: VirtualService
 apiVersion: networking.istio.io/v1alpha3
@@ -306,7 +306,6 @@ argocd 네임스페이스 선택 후 Install 클릭
 
 ![argo-config3.png](https://lcc3108.github.io/img/2021/01/04/Untitled%205.png)
 
-Name은 
 
 맨아래 Advanced Configuration을 클릭후 Anonymous Users Enabled 활성화(추후 검증시 들어가보기 위함)
 
