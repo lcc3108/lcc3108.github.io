@@ -297,7 +297,7 @@ spec:
 ### ArgoCD operator 
 ArgoCD는 Gitops의 구현체이다.
 
-지금 포스트에서는 오퍼레이터를 통해 ArgoCD라는걸 몰라도 간단히 설치를 할 수 있음을 확인할 수 있다.
+현재 포스트에서는 오퍼레이터를 통해 ArgoCD라는걸 몰라도 간단히 설치를 할 수 있음을 확인할 수 있다.
 #### 설치
 
 좌측 Administration → Namespaces메뉴에서 Create Namespace로 argocd 생성
