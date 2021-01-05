@@ -26,10 +26,15 @@ comments: true
 모든 설정을 끝마치고 기분좋게 젠킨스를 돌리는데 빨간불이 떴다.
 
 도커 빌드, 태깅 까지 잘돼는데 푸쉬할때 아래와같이 어느정도 진행중에 unknown blob이라는 에러가 발생하였다.
+### 문제해결
 
 ![harbor-error.png](https://lcc3108.github.io/img/2020-11/harbor/Untitled.png)
-바로 구글님께 여쭈어 보았더니 [harbor.yml에 뭔가를 추가해라](https://github.com/docker/distribution/issues/970#issuecomment-284227065), 
+바로 구글님께 여쭈어 보았더니 아래와 같이 [harbor.yml 값 변경](https://github.com/docker/distribution/issues/970#issuecomment-284227065)을 하면 된다.
 
+```yaml
+#harbor.yaml 혹은 헬름 차트 사용시 value.yaml에서 아래의 값 변경
+relativeurls: true #false 에서 true로 변환
+```
 
 
 
@@ -37,7 +42,6 @@ comments: true
 
 [httpd.conf파일에 아래와같이 추가해라](https://stackoverflow.com/questions/51508146/blob-unknown-when-pushing-to-custom-registry-through-apache-proxy) 등 많은 방법들을 시도해 보았지만 작동하지않았다.
 
-### 문제해결
 
 그러다가 harbor의 공식문서에 [Troubleshooting문서](https://goharbor.io/docs/2.1.0/install-config/troubleshoot-installation/)가 존재하길래 보았는데 nginx라던가 클라우드에서 제공하는 LB 즉 프록시를 사용하게 되면은 아래의 설정을 주석처리하거나 지워야한다.
 
