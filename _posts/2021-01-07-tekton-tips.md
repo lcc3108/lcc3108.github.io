@@ -5,6 +5,10 @@ categories: [Tekton]
 tags: [Tekton]
 comments: true
 ---
+
+- [TriggerTemplate](#triggertemplate)
+- [EventListener](#eventlistener)
+
 tekton을 사용하면서 구글링을 해봐도 잘 나오지 않고 심지어 공식홈페이지 문서도 업데이트가 느리기때문에 빠르게 공유를 위해 포스팅한다.
 
 2021-01-07일 기준
