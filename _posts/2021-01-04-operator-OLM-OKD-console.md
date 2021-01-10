@@ -15,6 +15,7 @@ comments: true
     - [설치](#설치)
     - [검증](#검증)
   - [OKD Console](#okd-console)
+    - [서비스어카운트 설정](#서비스어카운트-설정)
     - [디플로이먼트](#디플로이먼트)
     - [서비스](#서비스)
     - [검증](#검증-1)
@@ -150,6 +151,45 @@ deployment.apps/packageserver      2/2     2            2           26h
 
 OKD console에서 거의 모든 쿠버네티스 오브젝트를 생성, 삭제, 수정 할 수 있기때문에 dex와 같은 인증을 사용하거나 localhost에서만 사용하는걸 추천한다.
 
+
+
+#### 서비스어카운트 설정
+(2021-01-10 추가)
+
+대시보드는 쿠버네티스의 리소스들을 검색, 삭제, 수정을 위해서 권한이 필요하다.
+
+이를위해서 서비스어카운트에 클러스터 롤바인딩 시켜서 디플로이먼트에 줘야한다.
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: okd
+EOF
+```
+
+클러스터롤 바인딩
+
+서비스 어카운트의 네임스페이스를 아래 yours-namespace에 넣어줘야한다.
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: okd-cluster-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: okd
+  namespace: your-namespace
+EOF
+```
+
 #### 디플로이먼트
 
 https://your-domain.com 올바른 값으로 변경
@@ -175,6 +215,7 @@ spec:
       labels:
         app: okd-console
     spec:
+      serviceAccountName: okd
       containers:
       - image: quay.io/openshift/origin-console:4.6 # 4.7부터는 에러발생하므로 4.6 사용
         name: origin-console
