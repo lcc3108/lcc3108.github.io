@@ -6,6 +6,16 @@ tags: [Tekton]
 comments: true
 ---
 
+
+- [개요](#개요)
+- [설치](#설치)
+- [Event Linster + Trigger](#event-linster--trigger)
+- [TriggerBinding](#triggerbinding)
+- [Trigger Template](#trigger-template)
+
+
+# 개요
+
 이전 포스트에서는 실제 작업이 일어나는 tekton pipeline을 다뤘다.
 
 이번 포스트에서는 해당 파이프라인을 실행시키는 tekton trigger에 대해 설명한다.
@@ -52,7 +62,7 @@ tekton-triggers-controller-5994f6c94b-2fvjv    1/1     Running   1          16d
 tekton-triggers-webhook-68c7866d8-lrnzv        1/1     Running   1          16d
 ```
 
-## Event Linster + Trigger
+# Event Linster + Trigger
 
 이벤트 리스너는 HTTP기반으로 동작하며 JSON payload를 받는다.
 
@@ -158,7 +168,7 @@ spec:
 
 github-push 트리거의 깃허브 인터셉터는 filter로 이벤트타입이 push만 받는다고 명시하고있다.
 
-두번째는 CEL이라는 인터셉터인데 [CEL]](https://github.com/google/cel-spec)(Common Expression Language)은 구글이 오픈소스로 공개한 텍스트에 대한 쿼리언어이다.
+두번째는 CEL이라는 인터셉터인데 [CEL](https://github.com/google/cel-spec)(Common Expression Language)은 구글이 오픈소스로 공개한 텍스트에 대한 쿼리언어이다.
 
 
 filter에서 'body.ref.split('/')[2]' 라는 표현식을 사용하는데 이는 body(map)에 ref(string)라는 필드의 값을 split('/')(function) / 로 나눠서 배열로반환한다.
@@ -167,15 +177,15 @@ filter에서 'body.ref.split('/')[2]' 라는 표현식을 사용하는데 이는
 
 ![trigger-example.png](https://lcc3108.github.io/img/2021/01/31/tekton-example.png)
 
-자바스크립트를 통한 예시
+<center> 자바스크립트를 통한 예시 </center>
 
 overay는 json으로 들어온 데이터를 expression 파싱한 값을 key-value로 바디에 저장한다. sha의 경우 접근시 $(extensions.sha) 를 통해 접근이 가능하다.
 
-## TriggerBinding
+# TriggerBinding
 
 트리거 바인딩은 이벤트리스너 → 트리거로 파싱된 데이터를 트리거 템플릿과 매핑시켜준다.
 
-원래 바디에 있는 값은 $(body.*)로 접근이 가능하고 CEL을 사용하여 파싱한경우 $(extensions.*)로 접근이 가능하다.
+원래 바디에 있는 값은 $(body.\*)로 접근이 가능하고 CEL을 사용하여 파싱한경우 $(extensions.\*)로 접근이 가능하다.
 
 ```yaml
 apiVersion: triggers.tekton.dev/v1alpha1
@@ -201,13 +211,13 @@ spec:
     value: $(extensions.docker_project)
 ```
 
-## Trigger Template
+# Trigger Template
 
 트리거 템플릿은 트리거 바인딩으로부터 파라미터를 받아 적절한 파이프라인 엔티티를 실행시키는 역할을 한다.
 
 파이프라인 엔티티는 태스크(런), 파이프라인(런), 파이프라인 리소스등을 템플릿화 시킬 수 있다.
 
-트리거 템플릿의 파라미터에 접근할떄는 $(tt.params.*)로 접근한다.
+트리거 템플릿의 파라미터에 접근할떄는 $(tt.params.\*)로 접근한다.
 
 ```yaml
 apiVersion: triggers.tekton.dev/v1alpha1
