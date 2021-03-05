@@ -15,6 +15,7 @@ comments: true
     - [설치](#설치)
     - [검증](#검증)
   - [OKD Console](#okd-console)
+    - [네임스페이스 생성](#네임스페이스-생성)
     - [서비스어카운트 설정](#서비스어카운트-설정)
     - [디플로이먼트](#디플로이먼트)
     - [서비스](#서비스)
@@ -152,7 +153,10 @@ deployment.apps/packageserver      2/2     2            2           26h
 OKD console에서 거의 모든 쿠버네티스 오브젝트를 생성, 삭제, 수정 할 수 있기때문에 dex와 같은 인증을 사용하거나 localhost에서만 사용하는걸 추천한다.
 
 
-
+#### 네임스페이스 생성
+```bash
+kubectl create ns okd
+```
 #### 서비스어카운트 설정
 (2021-01-10 추가)
 
@@ -166,6 +170,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: okd
+  namespace: okd
 EOF
 ```
 
@@ -186,7 +191,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: okd
-  namespace: your-namespace
+  namespace: okd
 EOF
 ```
 
@@ -205,6 +210,7 @@ metadata:
   labels:
     app: okd-console
   name: okd-console
+  namespace: okd
 spec:
   replicas: 1
   selector:
@@ -222,7 +228,7 @@ spec:
         resources: {}
         command:
         - ./opt/bridge/bin/bridge
-        - "--base-address={https://your-domain.com}" ###### 변경 필요
+        - "--base-address={http(s)://your-domain.com}" ###### 변경 필요
         - "--public-dir=/opt/bridge/static"
 EOF
 ```
@@ -237,7 +243,7 @@ metadata:
   labels:
     app: okd-console
   name: okd-console
-  namespace: olm
+  namespace: okd
 spec:
   ports:
   - port: 9000
@@ -254,7 +260,7 @@ EOF
 port-foward 설정(위에서 찾은 팟 이름 넣기)
 
 ```bash
-kubectl port-forward -n olm service/okd-console 9000:9000
+kubectl port-forward -n okd service/okd-console 9000:9000
 ```
 
 [http://localhost:9000](http://localhost:9000) 접속시 아래와같은 화면이 뜨면 설치 성공
@@ -273,10 +279,10 @@ localhost가 아닌 example.com과 같은 FQDN을 가지고있을때 설정
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: olm
+  name: okd
   namespace: istio-system
 spec:
-  secretName: olm-tls
+  secretName: okd-tls
   issuerRef:
     name: letsencrypt-prod-istio
     kind: ClusterIssuer
@@ -291,8 +297,8 @@ spec:
 kind: Gateway
 apiVersion: networking.istio.io/v1alpha3
 metadata:
-  name: olm
-  namespace: olm
+  name: okd
+  namespace: okd
 spec:
   servers:
     - hosts:
@@ -310,7 +316,7 @@ spec:
         number: 443
         protocol: HTTPS
       tls:
-        credentialName: olm-tls
+        credentialName: okd-tls
         mode: SIMPLE
   selector:
     istio: ingressgateway
@@ -322,17 +328,17 @@ spec:
 kind: VirtualService
 apiVersion: networking.istio.io/v1alpha3
 metadata:
-  name: olm
-  namespace: olm
+  name: okd
+  namespace: okd
 spec:
   hosts:
     - example.com
   gateways:
-    - olm
+    - okd
   http:
     - route:
         - destination:
-            host: okd-console.olm.svc.cluster.local
+            host: okd-console.okd.svc.cluster.local
 ```
 
 ### ArgoCD operator 
