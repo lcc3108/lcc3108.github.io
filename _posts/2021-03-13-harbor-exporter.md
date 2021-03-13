@@ -179,3 +179,14 @@ Prometheus에서 확인 해보면 아래와같이 지표가 뜰 것이다.
 ![Prometheus.png](https://lcc3108.github.io/img/2021/03/13/Prometheus.png)
 
 Prometheus의 지표를 통해 Grafana를 사용하여 알럿이나 모니터링이 가능해졌다.
+
+Grafana에 대시보드는 [harbor-overview.json](https://github.com/c4po/harbor_exporter/blob/master/grafana/harbor-overview.json)을 import 하여 사용할 수 있다.
+
+1. Grafana에서 왼쪽 + 에서 Import 클릭
+2. Import via panel json에서 위 파일 내용을 붙여넣어준다
+3. 하단에 Prometheus-mgmt에 프로메테우스 데이터소스를 선택해준다.
+
+아래 사진과 같이 Grafana에서 Harbor의 상태를 확인 할 수 있다.
+
+![Grafana.png](https://lcc3108.github.io/img/2021/03/13/Grafana.png)
+
