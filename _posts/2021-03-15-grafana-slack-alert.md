@@ -87,7 +87,7 @@ grafana-alert 채널에 `@Grafana`로 메세지를 보내면 Grafana 앱의 봇�
 
   설치과정에서 크로미움 관련 라이브러리 종속성이 있다.
 
-  다만 설치후 그라파나를 재시작이 필요 하기때문에 도커로 돌리고 있다면 아래 방법을 사용해야한다.
+  다만 설치후 그라파나를 재시작이 필요 하기때문에 도커로 돌리고 있다면 아래의 독립실행형으로 설치 또는 이미지 렌더러를 포함한 이미지를 사용해야한다.
 
   ``` bash
   grafana-cli plugins install grafana-image-renderer
@@ -128,6 +128,8 @@ grafana-alert 채널에 `@Grafana`로 메세지를 보내면 Grafana 앱의 봇�
 
     [그라파나 오퍼레이터](https://github.com/integr8ly/grafana-operator)에 사이드카로 이미지렌더러를 추가시키면된다.
 
+    `사이드카의 경우 그라파나 디플로이먼트가 늘어날때마다 같이 늘어나기때문에 한 개의 디플로이먼트일때만 추천한다.`
+
     같은 팟에 있기때문에 localhost로 통신이 가능하며 그라파나는 3000번포트 그라파나 이미지 렌더러는 8081이 기본값이기 때문에 아래와같이 설정하였다.
 
 
@@ -166,13 +168,19 @@ grafana-alert 채널에 `@Grafana`로 메세지를 보내면 Grafana 앱의 봇�
 
     아래와 같이 사이드카를 사용하여 로컬호스트 통신이 가능하다.
 
-    만약 그라파나와 그라파나 이미지 렌더러를 각각의 팟으로 만들고 싶다면
+    **2021-06-27추가** : 누락된 이미지 렌더러 추가, 사이드카 사용예시 업데이트
+
+    `사이드카의 경우 그라파나 디플로이먼트가 늘어날때마다 같이 늘어나기때문에 한 개의 디플로이먼트일때만 추천한다.`
+
+    만약 단순한 테스트용이나 작은 서비스가 아닐 경우 그라파나와 이미지 렌더러를 따로 띄워줘야한다.
 
     grafana-image-renderer의 서비스의 주소를 `GF_RENDERING_SERVER_URL`에 넣어주고
 
     grafana 서비스의 주소를 `GF_RENDERING_CALLBACK_URL`에 넣어준다.
 
     서비스의 주소는 `{ServiceName}.{Namespace}.svc.cluster.local` 양식을 가진다.
+
+    - 사이드카 사용시 
 
     ``` yaml
     ---
@@ -212,8 +220,103 @@ grafana-alert 채널에 `@Grafana`로 메세지를 보내면 Grafana 앱의 봇�
             env:
             - name: IGNORE_HTTPS_ERRORS
               value: "true"
-    ---
+    ```
 
+  - 각각 디플로이먼트로 사용시 
+  
+    ``` yaml
+    ---
+    apiVersion: v1
+    data:
+      GF_RENDERING_CALLBACK_URL: http://grafana-service.grafana.svc:3000/
+      GF_RENDERING_SERVER_URL: http://grafana-image-renderer.grafana.svc:8081/render
+    kind: ConfigMap
+    metadata:
+      name: grafana-image-renderer
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: grafana
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: grafana
+      template:
+        metadata:
+          name: grafana
+          labels:
+            app: grafana
+        spec:
+          containers:
+          - name: grafana
+            image: grafana/grafana:latest
+            envFrom:
+            - configMapRef:
+              name: grafana-image-renderer
+            #이하 설정 pvc grafana server config 등 생략 ...
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: grafana-image-renderer
+      name: grafana-image-renderer
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: grafana-image-renderer
+      strategy: {}
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: grafana-image-renderer
+        spec:
+          containers:
+          - image: grafana/grafana-image-renderer
+            name: grafana-image-renderer
+            env:
+            - name: IGNORE_HTTPS_ERRORS
+              value: "true"
+            resources: {}
+            ports:
+            - containerPort: 8081
+              name: http
+              protocol: TCP
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: grafana-service
+    spec:
+      ports:
+      - name: grafana
+        port: 3000
+        protocol: TCP
+        targetPort: grafana-http
+      selector:
+        app: grafana
+      sessionAffinity: None
+      type: ClusterIP
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: grafana-image-renderer
+    spec:
+      ports:
+      - name: grafana-image-renderer
+        port: 8081
+        protocol: TCP
+        targetPort: http
+      selector:
+        app: grafana-image-renderer
+      sessionAffinity: None
+      type: ClusterIP
     ```
 
 ## 이미지 렌더러 설치 검증 및 슬랙 채널 추가
