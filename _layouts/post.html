@@ -60,7 +60,14 @@ layout: default
     </li>
   </ul>
 </div><!-- end share-buttons -->
-
+<div>댓글 남기기</div>
+<script src="https://utteranc.es/client.js"
+        repo="lcc3108/lcc3108.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
 {% if site.owner.disqus-shortname and page.comments == true %}
 <div id="disqus_thread"></div>
 {% include disqus.html %}
