@@ -23,16 +23,22 @@ comments: true
 ## 용어정리
 - annotation(어노테이션) : 레이블은 특정 오브젝트를 식별하기 위해서 지정하지만 어노테이션은 오브젝트에 정보(메타데이터)를 전달하기 위해서 존재한다.
 - sidecar contatiner : 사이드카 컨테이너는 기존의 컨테이너에 추가적인 기능을(로깅, 파일관리, 프록시 등) 확장 혹은 개선을 위해 같은 pod내에 존재하는 컨테이너를 의미한다.
+
   즉 원래 컨테이너를 변경시키지않고도 추가적인 기능을 하는 에드온 컨테이너라고 생각하면 쉽다.
 - mutating webhook : kube-api-server로 오는 요청을 가로챈뒤 특정 요청들을 mutating(변형)해 새로운 오브젝트 생성, spec의 수정 등을 수행한다.
   ![mutating webhook](https://d33wubrfki0l68.cloudfront.net/af21ecd38ec67b3d81c1b762221b4ac777fcf02d/7c60e/images/blog/2019-03-21-a-guide-to-kubernetes-admission-controllers/admission-controller-phases.png)
 
-  <center>사진 출처 [kubernetes blog](https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/) </center>
+<center>
+<a href="https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/">출처 : kubernetes blog</a>
+</center>
+
 - sidecar injection : mutating webhook을 사용해 특정 pod에 sidecar container를 넣는 행위를 말한다.
 - init container : pod의 container 생성전에 실행되며 contatiner에서 사용할 플러그인 다운로드, 볼륨에 대한 권한설정 등을 진행한뒤 종료한다.
 
 ## Vault Agent Injector
-[Vault Agent Injector](https://www.vaultproject.io/docs/platform/k8s/injector)는 Pod의 Create, Update 요청시 특정 어노테이션인 `vault.hashicorp.com/agent-inject: true`이 존재하는 경우 [Kubernetes Mutating Webhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)을 사용하여 Pod에 Vault data를 init container와 sidecar injection을 통해 주입한다.
+[Vault Agent Injector](https://www.vaultproject.io/docs/platform/k8s/injector)는 Pod의 Create, Update 요청시 특정 어노테이션인 `vault.hashicorp.com/agent-inject: true`이 존재하는 경우,
+
+[Kubernetes Mutating Webhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)을 사용하여 Pod에 Vault data를 init container와 sidecar injection을 통해 주입한다.
 
 주입된 민감데이터는 메모리볼륨으로 공유되며 `/vault/secrets`에 마운트된다.
 
@@ -86,6 +92,7 @@ sidecar container는 Init container에서 가져온 정보를 주기적으로 �
     ID          test
     password    passwd
     ```
+
 ### Vault 인증 설정 및 RBAC로 권한부여
 
 Vault Injector가 생성한 Pod의 init container와 sidecar container가 인증 받아야 하기 때문에 Kubernetes 인증관련 설정을 진행한다.
@@ -130,13 +137,18 @@ ex) 아래 설정의 경우 test, default 네임스페이스의 vault, vault-atu
     policies=secret-read \
     ttl=24h
     ```
+
 ### Vault Injector 사용
 
 Vault Injector가 Init Container와 Sidecar 주입시 Vault Agent가 실행되며 아래 다이어그램의 프로세스를 거쳐 인증 및 데이터 fetch가 진행된다.
 
 ![프로세스](https://www.datocms-assets.com/2885/1578078487-screen-shot-2020-01-03-at-19-07-14.png?fit=max&q=80&w=2000)
 
-<center>출처 [Hashicorp 공식 블로그](https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes)</center>
+<center>
+
+<a href="https://www.hashicorp.com/blog/dynamic-database-credentials-with-vault-and-kubernetes">출처 : Hashicorp 공식 블로그</a>
+
+</center>
 
 1.  네임스페이스 생성
 
