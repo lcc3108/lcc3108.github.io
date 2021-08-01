@@ -12,6 +12,7 @@ comments: true
   - [상태](#상태)
   - [초기화](#초기화)
   - [설치](#설치)
+  - [Web ui 요소 설명](#web-ui-요소-설명)
 
 ## 개요
 
@@ -181,3 +182,15 @@ vault operator init -key-shares=3 -key-threshold=2
     ```bash
     kubectl port-forward service/vault 8200:8200
     ```
+
+### Web ui 요소 설명
+- Secrets : 민감데이터를 저장해주는 엔진들을 관리 한다.
+  - Secrets Engine : 아래 항목을 지원하며 중복된 엔진을 생성할 수 있다.
+    ![Secrets Engines](https://lcc3108.github.io/img/2021/08/01/vault-1.png)
+- Access : Vault 인증 설정을 관리 한다.
+  - Auth Method : 인증방법에 대한 설정이며 아래 항목을 지원한다.
+    ![Auth Methods](https://lcc3108.github.io/img/2021/08/01/vault-2.png)
+  - Entity : Vault Client를 매핑시키는 개체이다.
+  - Group : 그룹을 생성해 Entity들을 그룹으로 관리할 수 있다.
+  - Leases : Entity들의 로그인시 생성되는 인증정보이며 생성시간, 만료시간, 인증정보 취소등이 가능하다.
+- Policy : Vault는 RBAC으로 권한관리를 하기때문에 policy에서 권한을 지정한다. 
