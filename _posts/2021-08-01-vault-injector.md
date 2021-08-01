@@ -6,6 +6,7 @@ tags: [Vault]
 comments: true
 ---
 
+- [중요사항](#중요사항)
 - [개요](#개요)
 - [용어정리](#용어정리)
 - [Vault Agent Injector](#vault-agent-injector)
@@ -15,6 +16,15 @@ comments: true
   - [Vault Injector 사용](#vault-injector-사용)
   - [검증](#검증)
 
+## 중요사항
+현재 kubernetes 버전 1.21.*에서 jwt token 변경사항때문에 아래 버전에서 동작하지 않음을 확인했습니다.
+- vault : 1.8.0
+- vault injector : 0.11.0
+
+자세한 내용은 아래의 이슈 참고 부탁드립니다.
+
+- [issue-1](https://github.com/hashicorp/vault-helm/issues/562)
+- [issue-2](https://github.com/hashicorp/vault/issues/11953)
 ## 개요
 쿠버네티스 환경에서 Vault 활용하기 1편에서 Vault를 설치하고 설치검증을 진행했다.
 
