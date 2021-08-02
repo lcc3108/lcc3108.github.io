@@ -25,6 +25,7 @@ comments: true
 
 - [issue-1](https://github.com/hashicorp/vault-helm/issues/562)
 - [issue-2](https://github.com/hashicorp/vault/issues/11953)
+
 ## 개요
 쿠버네티스 환경에서 Vault 활용하기 1편에서 Vault를 설치하고 설치검증을 진행했다.
 
