@@ -94,58 +94,59 @@ EC2의 인스턴스 타입별로 ENI의 제약이 걸려있는데 워커노드�
 
     필자는 `kubectl set env ds aws-node -n kube-system WARM_PREFIX_TARGET=1` 사용
 5. worker node 업데이트
-   1. self managed
-      ```bash
-      --use-max-pods false --kubelet-extra-args '--max-pods=${OUTPUT}'
-      ```
-   2. managed
-      ```bash
-      eksctl create nodegroup \
-      --cluster <my-cluster> \
-      --region <us-west-2> \
-      --name <my-nodegroup> \
-      --node-type <m5.large> \
-      --managed \
-      --max-pods-per-node ${OUTPUT}
-      ```
-  3. managed use launch template
-    ```bash
-    --kubelet-extra-args '--max-pods=${OUTPUT}'
-    ```
-  4. bottlerocket user data에 settings.kubernetes.max-pods = ${OUTPUT} 부분에 추가 
-  
-  혹은 아래의 파일을 `eks-max-pod.yaml`로 저장후 `eksctl create cluster --config-file eks-max-pod.yaml `  실행
+     1. self managed
+         ```bash
+         --use-max-pods false --kubelet-extra-args '--max-pods=${OUTPUT}'
+         ```
+     2. managed
+         ```bash
+         eksctl create nodegroup \
+         --cluster <my-cluster> \
+         --region <us-west-2> \
+         --name <my-nodegroup> \
+         --node-type <m5.large> \
+         --managed \
+         --max-pods-per-node ${OUTPUT}
+         ```
+     3. managed use launch template
+        ```bash
+        --kubelet-extra-args '--max-pods=${OUTPUT}'
+        ```
+     4. bottlerocket user data에 settings.kubernetes.max-pods = ${OUTPUT} 부분에 추가 
+     
+        혹은 아래의 파일을 `eks-max-pod.yaml`로 저장후 `eksctl create cluster --config-file eks-max-pod.yaml `  실행
 
-  ```yaml
-  ---
-  apiVersion: eksctl.io/v1alpha5
-  kind: ClusterConfig
+        ```yaml
+        ---
+        apiVersion: eksctl.io/v1alpha5
+        kind: ClusterConfig
 
-  metadata:
-    name: bottlerocket
-    region: us-west-2
-    version: '1.21'
+        metadata:
+          name: bottlerocket
+          region: us-west-2
+          version: '1.21'
 
-  nodeGroups:
-    - name: ng-bottlerocket
-      instanceType: m5.large
-      desiredCapacity: 4
-      amiFamily: Bottlerocket
-      iam:
-        attachPolicyARNs:
-            - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
-            - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
-            - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-            - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-      ssh:
-          allow: true
-          publicKeyName: YOUR_EC2_KEYPAIR_NAME
-      bottlerocket:
-        settings:
-          motd: "Hello from eksctl!"
-          kubernetes:
-            maxPodsPerNode: ${OUTPUT}
-  ```
+        nodeGroups:
+          - name: ng-bottlerocket
+            instanceType: m5.large
+            desiredCapacity: 4
+            amiFamily: Bottlerocket
+            iam:
+              attachPolicyARNs:
+                  - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+                  - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+                  - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+                  - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+            ssh:
+                allow: true
+                publicKeyName: YOUR_EC2_KEYPAIR_NAME
+            bottlerocket:
+              settings:
+                motd: "Hello from eksctl!"
+                kubernetes:
+                  maxPodsPerNode: ${OUTPUT}
+        ```
+        
 ### 검증
 `kubectl describe node {NODE_NAME} | grep pods` 명령어로 ${OUTPUT}과 같게 변경되었는지 확인
 
