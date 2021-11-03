@@ -188,6 +188,7 @@ istio-system   nginx   True    nginx-tls   62m
 - [Troubleshooting Issuing ACME Certificates](https://cert-manager.io/docs/faq/acme/)
 
 ### Istio Gateway, VirtualService 생성
+default-http-to-https 게이트웨이를 생성하는 이유는 [링크](https://lcc3108.github.io/articles/2021-04/istio-https-redirect-certmanager-renew) 글을 참고해주세요
 
 ```bash
 $ kubectl apply -f - <<EOF
@@ -195,17 +196,27 @@ $ kubectl apply -f - <<EOF
 kind: Gateway
 apiVersion: networking.istio.io/v1alpha3
 metadata:
-  name: nginx
+  name: default-http-to-https
 spec:
   servers:
     - hosts:
-        - your-site.com
+        - '*'
       port:
         name: http
         number: 80
         protocol: HTTP
       tls:
-        httpsRedirect: true # 인증서 발급전 테스트를 원한다면 옵션제거가능
+        httpsRedirect: true # http host가 설정되지않는 게이트웨이에대해서 모두 https로 리다이렉션
+  selector:
+    app: istio-ingressgateway
+---
+#Gateway
+kind: Gateway
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: nginx
+spec:
+  servers:
     - hosts:
         - your-site.com
       port:
@@ -229,7 +240,7 @@ spec:
   http:
     - route:
         - destination:
-            host: nginx#.{service-namespace}.svc.cluster.local
+            host: nginx #.{service-namespace}.svc.cluster.local
   gateways:
   - nginx
 EOF
