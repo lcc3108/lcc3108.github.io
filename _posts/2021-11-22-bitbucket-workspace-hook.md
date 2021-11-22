@@ -63,4 +63,4 @@ $ curl -u {YOUR_BITBUCKET_ID} -X POST -H 'Content-Type: application/json'  https
 
 해당 아이피 대역대는 [비트버킷 홈페이지](https://support.atlassian.com/organization-administration/docs/ip-addresses-and-domains-for-atlassian-cloud-products/#AtlassiancloudIPrangesanddomains-OutgoingConnections)에서 확인 할 수 있다.
 
-주소로 남기는 이유는 해당 주소가 변경 될 수 있는데 블로그 글에서 참조한 상수값으로 피해를 입을 수 있기때문이다.
+주소로 남기는 이유는 해당 아이피대역대가 변경 될 수 있는데 블로그 글에서 참조한 상수값으로 피해를 입을 수 있기때문이다.
