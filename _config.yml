@@ -70,6 +70,7 @@ owner:
   google:
     plus: #username
     analytics: UA-145710468-1
+    analyticsv4: G-4STF2GH6T8
     verify:
     ad-client:
     ad-slot:
